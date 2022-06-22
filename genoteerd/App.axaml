@@ -1,0 +1,48 @@
+<Application
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="MulberryLabs.Genoteerd.App">
+    <Application.Styles>
+        <FluentTheme Mode="Light" />
+
+        <Style Selector="WrapPanel.edge">
+            <Setter Property="Background" Value="LightGray" />
+            <!-- TODO ⮝⮝⮝ MAKE THEMEABLE ⮝⮝⮝ -->
+        </Style>
+
+        <Style Selector="WrapPanel.edge.NS">
+            <Setter Property="Height" Value="2" />
+        </Style>
+        <Style Selector="WrapPanel.edge.NS:pointerover">
+            <Setter Property="Cursor" Value="SizeNorthSouth" />
+        </Style>
+
+        <Style Selector="WrapPanel.edge.WE">
+            <Setter Property="Width" Value="2" />
+        </Style>
+        <Style Selector="WrapPanel.edge.WE:pointerover">
+            <Setter Property="Cursor" Value="SizeWestEast" />
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="Gray" />
+            <!-- TODO ⮝⮝⮝ MAKE THEMEABLE ⮝⮝⮝ -->
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="BorderThickness" Value="0" />
+            <!-- TODO ⮟⮟⮟ MAKE THEMEABLE ⮟⮟⮟ -->
+            <Setter Property="FontFamily" Value="Fira Code" />
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </Application.Styles>
+</Application>

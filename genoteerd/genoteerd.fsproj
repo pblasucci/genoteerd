@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Tagging.fs" />
+        <Compile Include="Nanoid.fsi" />
+        <Compile Include="Nanoid.fs" />
+        <Compile Include="Library.fs" />
+        <Compile Include="Environment.fs" />
+        <Compile Include="StickyNote.fs" />
+        <Compile Include="Storage.fs" />
+        <Compile Include="StickNoteView.fs" />
+        <Compile Include="StickyNoteHost.fs" />
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="FSharp.Core" Version="6.0.4" />
+      <PackageReference Include="Dapper" Version="2.0.123" />
+      <PackageReference Include="JaggerJo.Avalonia.FuncUI.DSL" Version="0.5.3" />
+      <PackageReference Include="MessageBox.Avalonia" Version="2.0.1" />
+      <PackageReference Include="NodaTime" Version="3.1.0" />
+      <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
+    </ItemGroup>
+
+</Project>

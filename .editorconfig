@@ -1,0 +1,31 @@
+# root editor config for genoteerd
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+[*.{fs,fsi,fsscript,fsx,ml,mli}]
+indent_size = 2
+tab_width = 2
+max_line_length = 80
+fsharp_space_before_colon = true
+fsharp_max_if_then_else_short_width = 80
+fsharp_max_infix_operator_expression = 80
+fsharp_max_record_width = 80
+fsharp_max_array_or_list_width = 80
+fsharp_max_value_binding_width = 80
+fsharp_max_function_binding_width = 80
+fsharp_max_dot_get_expression_width = 80
+fsharp_multiline_block_brackets_on_same_column = true
+fsharp_max_elmish_width = 80
+fsharp_single_argument_web_mode = true
+fsharp_align_function_signature_to_indentation = true
+fsharp_alternative_long_member_definitions = true
+fsharp_multi_line_lambda_closing_newline = true
+fsharp_keep_indent_in_branch = true
+fsharp_blank_lines_around_nested_multiline_expressions = false

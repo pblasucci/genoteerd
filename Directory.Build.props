@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <WarningLevel>5</WarningLevel>
+        <WarnOn>
+            1182;       <!-- unused bindings -->
+            3218;       <!-- signature / implementation argument mismatch -->
+            3366;       <!-- OCaml-style indexer notation -->
+            3388;       <!-- additional implicit upcasts (subsumption) -->
+            3390;       <!-- invalid XMLDoc comments -->
+            3395;       <!-- method argument implicit conversion -->
+            $(WarnOn)   <!-- include warning set elsewhere -->
+        </WarnOn>
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RootNamespace>MulberryLabs.Genoteerd</RootNamespace>
+        <Company>Mulberry Labs, BV</Company>
+        <Product>Genoteerd</Product>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>bin/Debug/</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>bin/Release/</OutputPath>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+</Project>
