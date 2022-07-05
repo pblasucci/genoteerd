@@ -23,24 +23,24 @@ type App() =
 
   let ensureBasePath () =
     match GetFolderPath(SpecialFolder.Personal) with
-    | Length 0u -> failwith "Unable to determine home folder."
+    | Length 0u -> invalidProgram "Unable to determine home folder."
     | folder -> folder
 
-  let ensureDatabase (Trace log as env:AppEnv) =
-    let needsInstall, filePath =
-      env.StorageFile
-      |> Option.map (fun file ->
-          let newStore = not file.Exists
-          if newStore then
-            using (file.Open(FileMode.OpenOrCreate)) ignore
-            file.Refresh()
-          newStore, file.FullName
-      )
-      |> Option.defaultValue (true, ":memory:") // ⮜⮜⮜ in-memory storage
+  let tryGetDbFile args =
+    match args with
+    | [| "--db"; Length n as file |]
+      when 0u < n -> Some file
+    | _otherwise  -> None
 
-    if needsInstall then
+  let ensureDatabase (Trace log as env:AppEnv) =
+    if not env.StorageFile.Exists then
+      using (env.StorageFile.Open FileMode.OpenOrCreate) ignore
+      env.StorageFile.Refresh()
+
       match DDL.install env with
-      | Ok () -> log.Info("New store installed at '{Path}'", filePath)
+      | Ok () ->
+          let path = env.StorageFile.FullName
+          log.Info("New store installed at '{Path}'", path)
       | Error x -> raise x
 
   let launchNotes (Trace log as env) =
@@ -53,8 +53,7 @@ type App() =
         for note in notes do
           StickyNoteHost(env, note).Show()
 
-  override me.Initialize() =
-    AvaloniaXamlLoader.Load(me)
+  override me.Initialize() = AvaloniaXamlLoader.Load(me)
 
   override me.OnFrameworkInitializationCompleted() =
     match me.ApplicationLifetime with
@@ -66,12 +65,13 @@ type App() =
         ensureBasePath (),
         ensureTimeZone (),
         SystemClock.Instance,
-        dbFile="develop.db" //TODO optional CLI arg
+        ?dbFile=tryGetDbFile desktop.Args
       )
+
       ensureDatabase env
       launchNotes env
 
-    | _ -> failwith "Incorrect application lifetime detected."
+    | _ -> invalidProgram "Incorrect application lifetime detected."
 
     base.OnFrameworkInitializationCompleted()
 

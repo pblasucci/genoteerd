@@ -19,6 +19,9 @@ type MessageBox =
 /// Contains miscellaneous utilities (n.b. this module is "auto-open'ed").
 [<AutoOpen>]
 module Library =
+  let inline invalidProgram (message : string) : 'T =
+    raise (InvalidProgramException message)
+
   let (|Trimmed|) (value: string) : string =
     if String.IsNullOrEmpty value then value else value.Trim()
 
@@ -37,3 +40,8 @@ module Library =
         me.BeginTransaction()
       with
       | _ -> reraise ()
+
+
+  type DirectoryInfo with
+    member me.AppendPath([<ParamArray>] paths : string array) =
+      Path.Combine [| me.FullName; yield! paths |]

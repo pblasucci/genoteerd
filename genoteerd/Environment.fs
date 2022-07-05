@@ -56,17 +56,20 @@ module Patterns =
 
 /// Provides execution-environment dependent data and functionality.
 type AppEnv(basePath, zone, clock, ?dbFile) =
-  let appFolder = Path.Combine(basePath, ".genoteered")
-  let logFolder = Path.Combine(appFolder, "logs")
-  let dataFolder = Path.Combine(appFolder, "data")
-  let storeFile =
-    dbFile |> Option.map (fun file -> Path.Combine(dataFolder, file))
+  let appFolder = DirectoryInfo(Path.Combine(basePath, ".genoteered"))
+  do appFolder.Create()
+
+  let logFolder = appFolder.CreateSubdirectory("logs")
+  let logFileBase = logFolder.AppendPath("genoteerd_.txt")
+
+  let dataFolder = appFolder.CreateSubdirectory("data")
+  let storeFile = dataFolder.AppendPath(defaultArg dbFile "genoteerd.db")
 
   let connection =
     SQLiteConnectionStringBuilder(
+      DataSource = storeFile,
       Version = 3,
-      JournalMode = SQLiteJournalModeEnum.Wal,
-      DataSource = (storeFile |> Option.defaultValue ":memory:")
+      JournalMode = SQLiteJournalModeEnum.Wal
     )
 
   let clock = ZonedClock(clock, zone, CalendarSystem.Iso)
@@ -79,28 +82,23 @@ type AppEnv(basePath, zone, clock, ?dbFile) =
       .MinimumLevel.Information()
 #endif
       .WriteTo.File(
-        path=Path.Combine(logFolder, "genoteerd_.txt"),
+        path=logFileBase,
         rollingInterval=RollingInterval.Day,
         rollOnFileSizeLimit=true
       )
       .CreateLogger()
 
-  do (* .ctor *)
-    for folder in [ appFolder; logFolder; dataFolder ] do
-      if not (Directory.Exists folder) then
-        folder |> Directory.CreateDirectory |> ignore
-
   /// Location on disk where all application files live.
-  member _.AppFolder = DirectoryInfo(appFolder)
+  member _.AppFolder = appFolder
 
   /// Location on disk to which all log files are written.
-  member _.LogFolder = DirectoryInfo(logFolder)
+  member _.LogFolder = logFolder
 
   /// Location on disk wherein all database files are keep.
-  member _.DataFolder = DirectoryInfo(dataFolder)
+  member _.DataFolder = dataFolder
 
   /// Full path to the database currently being used by the application.
-  member _.StorageFile = storeFile |> Option.map FileInfo
+  member _.StorageFile = FileInfo storeFile
 
   interface ITrace with
     member _.Debug(template, data) = logger.Debug(template, data)

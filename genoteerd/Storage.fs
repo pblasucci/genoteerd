@@ -39,7 +39,6 @@ module DDL =
     try
       db.Execute(sql=Notes, transaction=tx) |> ignore
       tx.Commit()
-      db.Close()
       Ok ()
     with
     | x ->
