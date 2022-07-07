@@ -11,7 +11,7 @@ open Avalonia.Media
 
 [<RequireQualifiedAccess>]
 module StickyNoteView =
-  let edgeGrip dock =
+  let edgeGrip dock : IView =
     WrapPanel.create [
       WrapPanel.dock dock
       match dock with
@@ -25,10 +25,11 @@ module StickyNoteView =
         WrapPanel.cursor (Cursor.Parse "SizeWestEast")
         WrapPanel.width 2.
         WrapPanel.classes [ "edge"; "WE" ]
-      | otherwise -> failwith $"Unknown Dock enumeration value: {otherwise}"
+      | otherwise ->
+        failwith $"Unknown Dock enumeration value: {otherwise}"
     ]
 
-  let resizeGrips : IView list = [
+  let resizeGrips = [
     edgeGrip Dock.Top
     edgeGrip Dock.Left
     edgeGrip Dock.Bottom
@@ -41,20 +42,14 @@ module StickyNoteView =
       Button.column 0
       Button.row 0
       Button.content "✚"
-      Button.onClick (fun e ->
-        e.Handled <- true
-        host.Launch()
-      )
+      Button.onClick (fun e -> host.Launch(); e.Handled <- true)
     ]
     WrapPanel.create [ WrapPanel.column 1; WrapPanel.row 0 ]
     Button.create [
       Button.column 2
       Button.row 0
       Button.content "✖"
-      Button.onClick (fun e ->
-        e.Handled <- true
-        host.Delete()
-      )
+      Button.onClick (fun e -> host.Delete(); e.Handled <- true)
     ]
   ]
 
@@ -95,9 +90,9 @@ module StickyNoteView =
       ]
     ]
 
-  let main (host : IStickyNoteHost) (note : string) =
+  let main (host : IStickyNoteHost) text =
     Component(fun context ->
-      let state = context.useState note
+      let state = context.useState text
 
       context.useEffect (
         handler = (fun () -> host.Upsert(state.Current)),

@@ -18,12 +18,12 @@ type App() =
 
   let ensureTimeZone () =
     let zone = DateTimeZoneProviders.Tzdb.GetSystemDefault()
-    if isNull zone then failwith "Unable to determine current time zone!"
+    if isNull zone then invalidProg "Unable to determine current time zone!"
     zone
 
   let ensureBasePath () =
     match GetFolderPath(SpecialFolder.Personal) with
-    | Length 0u -> invalidProgram "Unable to determine home folder."
+    | Length 0u -> invalidProg "Unable to determine home folder."
     | folder -> folder
 
   let tryGetDbFile args =
@@ -58,20 +58,18 @@ type App() =
   override me.OnFrameworkInitializationCompleted() =
     match me.ApplicationLifetime with
     | :? IClassicDesktopStyleApplicationLifetime as desktop ->
-
-      desktop.ShutdownMode <- ShutdownMode.OnLastWindowClose
-
       let env = AppEnv(
         ensureBasePath (),
         ensureTimeZone (),
         SystemClock.Instance,
         ?dbFile=tryGetDbFile desktop.Args
       )
-
       ensureDatabase env
+
+      desktop.ShutdownMode <- ShutdownMode.OnLastWindowClose
       launchNotes env
 
-    | _ -> invalidProgram "Incorrect application lifetime detected."
+    | _ -> invalidProg "Incorrect application lifetime detected."
 
     base.OnFrameworkInitializationCompleted()
 
@@ -86,5 +84,5 @@ module Program =
         .UseSkia()
         .StartWithClassicDesktopLifetime(args)
     with x ->
-      MessageBox.Alert(x.Message, "Critical Failure!")
+      MessageBox.Alert(x.Message, title = "Critical Failure!") |> ignore
       1 // ⮜⮜⮜ non-success exit code

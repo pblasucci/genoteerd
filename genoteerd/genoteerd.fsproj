@@ -6,11 +6,12 @@
 
     <ItemGroup>
         <Compile Include="Tagging.fs" />
+        <Compile Include="Library.fs" />
         <Compile Include="Nanoid.fsi" />
         <Compile Include="Nanoid.fs" />
-        <Compile Include="Library.fs" />
         <Compile Include="Environment.fs" />
         <Compile Include="StickyNote.fs" />
+        <Compile Include="Storage.fsi" />
         <Compile Include="Storage.fs" />
         <Compile Include="StickNoteView.fs" />
         <Compile Include="StickyNoteHost.fs" />

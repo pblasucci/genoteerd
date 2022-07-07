@@ -42,6 +42,7 @@ type IStore =
   abstract Connect : unit -> IDbConnection
 
 
+/// Helpers for working with AppEnv (n.b. this module is "auto-open'ed").
 [<AutoOpen>]
 module Patterns =
   /// Helper to simplify working with IClock instances.

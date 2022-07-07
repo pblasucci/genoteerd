@@ -16,9 +16,6 @@ module NanoId =
   let [<Literal>] Alphabet =
     "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-  let inline (|Length|) value =
-    Length(if String.IsNullOrWhiteSpace value then 0 else value.Trim().Length)
-
   let inline stackspan<'T when 'T : unmanaged> size =
     Span<'T>(size |> NativePtr.stackalloc<'T> |> NativePtr.toVoidPtr, size)
 
@@ -38,7 +35,7 @@ module NanoId =
 
       while runNextLoop do
         let index = int buffer[bufferCount] &&& mask
-        if index < length then
+        if index < int length then
           nanoid[nanoidCount] <- alphabet[index]
 
         bufferCount <- bufferCount + 1

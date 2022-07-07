@@ -22,11 +22,11 @@ module [<AutoOpen>] Operators =
   > (value : ^S) = (# "" value : ^T #)
 
   /// Applies a general-purpose "tag" to a given value
-  /// (n.b. the target return type MUST support the Taggable "trait").
+  /// (n.b. the return value type MUST support the Taggable "trait").
   let inline tag (value : 'T) : 'Tagged =
     ``¡tag!``<Taggable, 'T, 'Tagged> value
 
-  /// Removes a general-purpose "tag" to a given value
-  /// (n.b. the source value type MUST support the Taggable "trait").
+  /// Removes a general-purpose "tag" from a given value
+  /// (n.b. the input value type MUST support the Taggable "trait").
   let inline untag (value : 'Tagged) : 'T =
     ``¡untag!``<Taggable, 'Tagged, 'T> value
