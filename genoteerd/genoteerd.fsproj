@@ -13,6 +13,7 @@
         <Compile Include="StickyNote.fs" />
         <Compile Include="Storage.fsi" />
         <Compile Include="Storage.fs" />
+        <Compile Include="MessageBox.fs" />
         <Compile Include="StickNoteView.fs" />
         <Compile Include="StickyNoteHost.fs" />
         <Compile Include="Program.fs" />

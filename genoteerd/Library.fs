@@ -3,25 +3,6 @@ namespace MulberryLabs.Genoteerd
 open System
 open System.Data
 open System.IO
-open System.Threading.Tasks
-open MessageBox.Avalonia
-open MessageBox.Avalonia.Enums
-
-open type MessageBoxManager
-
-/// Utilities for working with dialogs in AvaloniaUI
-type MessageBox =
-  /// Display a message to the end-user in a model dialog.
-  static member Alert(prompt, ?buttons, ?title, ?owner) =
-    let title' = defaultArg title "Genoteerd"
-    let buttons' = defaultArg buttons ButtonEnum.Ok
-    let dialog = GetMessageBoxStandardWindow(title', prompt, buttons')
-    let task =
-      match owner with
-      | Some wo -> dialog.ShowDialog(wo)
-      | None    -> dialog.Show()
-    task.ContinueWith(Action<Task<_>>(ignore))
-
 
 /// Contains miscellaneous utilities (n.b. this module is "auto-open'ed").
 [<AutoOpen>]

@@ -1,5 +1,7 @@
 namespace MulberryLabs.Genoteerd
 
+open System
+open System.Buffers
 open System.Threading.Tasks
 open Avalonia
 open Avalonia.Controls
@@ -7,7 +9,6 @@ open Avalonia.FuncUI.DSL
 open Avalonia.FuncUI.Hosts
 open Avalonia.Platform
 
-open MessageBox.Avalonia.Enums
 open MulberryLabs.Genoteerd
 open MulberryLabs.Genoteerd.Storage
 
@@ -95,13 +96,13 @@ type StickyNoteHost(env: AppEnv, ?note : Note) as me =
         note' <- note
       | Error failure ->
         log.Error(failure, "Failed to update Note {NoteId}.", note'.Id)
-        MessageBox.Alert(failure.Message) |> ignore
+        MessageBox.Alert(failure.Message, owner=me)
 
     member me.Delete() =
-      // TODO prompt for confirmation
-      match DML.deleteNote env note'.Id with
-      | Ok () ->
-        me.Close()
-      | Error failure ->
-        log.Error(failure, "Failed to delete Note {NoteId}.", note'.Id)
-        MessageBox.Alert(failure.Message) |> ignore
+      if MessageBox.Confirm("This cannot be undone. Continue?", owner=me) then
+        match DML.deleteNote env note'.Id with
+        | Ok () ->
+          me.Close()
+        | Error failure ->
+          log.Error(failure, "Failed to delete Note {NoteId}.", note'.Id)
+          MessageBox.Alert(failure.Message, owner=me)

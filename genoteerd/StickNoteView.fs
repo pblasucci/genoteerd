@@ -42,14 +42,14 @@ module StickyNoteView =
       Button.column 0
       Button.row 0
       Button.content "✚"
-      Button.onClick (fun e -> host.Launch(); e.Handled <- true)
+      Button.onClick (fun e -> e.Handled <- true; host.Launch())
     ]
     WrapPanel.create [ WrapPanel.column 1; WrapPanel.row 0 ]
     Button.create [
       Button.column 2
       Button.row 0
       Button.content "✖"
-      Button.onClick (fun e -> host.Delete(); e.Handled <- true)
+      Button.onClick (fun e -> e.Handled <- true; host.Delete())
     ]
   ]
 

@@ -65,8 +65,6 @@ type App() =
         ?dbFile=tryGetDbFile desktop.Args
       )
       ensureDatabase env
-
-      desktop.ShutdownMode <- ShutdownMode.OnLastWindowClose
       launchNotes env
 
     | _ -> invalidProg "Incorrect application lifetime detected."
@@ -82,7 +80,7 @@ module Program =
         .Configure<App>()
         .UsePlatformDetect()
         .UseSkia()
-        .StartWithClassicDesktopLifetime(args)
+        .StartWithClassicDesktopLifetime(args, ShutdownMode.OnLastWindowClose)
     with x ->
-      MessageBox.Alert(x.Message, title = "Critical Failure!") |> ignore
+      MessageBox.Alert(x.Message, title = "Critical Failure!")
       1 // ⮜⮜⮜ non-success exit code
