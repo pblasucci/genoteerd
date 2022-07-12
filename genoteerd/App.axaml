@@ -5,9 +5,13 @@
     <Application.Styles>
         <FluentTheme Mode="Light" />
 
+        <Style Selector="Window.note">
+            <Setter Property="Background" Value="LightYellow" />
+        </Style>
+
         <Style Selector="WrapPanel.edge">
-            <Setter Property="Background" Value="LightGray" />
-            <!-- TODO ⮝⮝⮝ MAKE THEMEABLE ⮝⮝⮝ -->
+            <Setter Property="Background" Value="Yellow" />
+            <Setter Property="Opacity" Value="0.5" />
         </Style>
 
         <Style Selector="WrapPanel.edge.NS">
@@ -27,7 +31,6 @@
         <Style Selector="Button">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="Gray" />
-            <!-- TODO ⮝⮝⮝ MAKE THEMEABLE ⮝⮝⮝ -->
             <Setter Property="FontSize" Value="14" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -36,13 +39,19 @@
         </Style>
 
         <Style Selector="TextBox">
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <!-- TODO ⮟⮟⮟ MAKE THEMEABLE ⮟⮟⮟ -->
             <Setter Property="FontFamily" Value="Fira Code" />
             <Setter Property="FontWeight" Value="Medium" />
         </Style>
+        <Style Selector="TextBox:pointerover /template/ Border">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
         <Style Selector="TextBox:focus /template/ Border">
             <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
         </Style>
+
     </Application.Styles>
 </Application>

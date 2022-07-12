@@ -14,6 +14,7 @@ open MulberryLabs.Genoteerd.Storage
 
 type StickyNoteHost(env: AppEnv, ?note : Note) as me =
   inherit HostWindow()
+  
   let host = me :> IStickyNoteHost
   // HACK ⮝⮝⮝ makes it easier to call into myself elsewhere
   let (Trace log) = env
@@ -42,6 +43,7 @@ type StickyNoteHost(env: AppEnv, ?note : Note) as me =
     me.Height <- defaultArg bottom 120.
     me.Title <- "Genoteerd"
     me.Content <- StickyNoteView.main host note'.Content
+    me.Classes.Add("note")
 
     me.Opened.Add(fun _ ->
       let pos = me.Position
