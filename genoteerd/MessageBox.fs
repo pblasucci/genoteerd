@@ -13,19 +13,19 @@ open type MessageBoxManager
 
 module MsgBox =
   let showDialog (task' : unit -> Task<'T>) =
-     let mutable result = Unchecked.defaultof<'T>
+     let result = ref Unchecked.defaultof<'T>
      use cts = new CancellationTokenSource()
      let task = task' ()
      task.ContinueWith(
        (fun (t : Task<_>) ->
-         result <- t.Result
+         result.Value <- t.Result
          cts.Cancel()
        ),
        TaskScheduler.FromCurrentSynchronizationContext()
      )
      |> ignore
      Dispatcher.UIThread.MainLoop(cts.Token)
-     result
+     result.Value
 
   let makeDialog buttons title message =
     GetMessageBoxStandardWindow(

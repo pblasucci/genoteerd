@@ -19,9 +19,7 @@ type StickyNoteHost(env: AppEnv, ?note : Note, ?theme : NoteTheme) as me =
   // HACK ⮝⮝⮝ remember: active patterns cannot be used in a .ctor
 
   let mutable note' =
-    note |> Option.defaultWith (fun () ->
-      { Note.New() with Theme = defaultArg theme Default }
-    )
+    note |> Option.defaultWith (fun () -> Note.New(?theme=theme))
 
   do (* .ctor *)
     let startLocation, top, right, bottom, left =
@@ -97,15 +95,18 @@ type StickyNoteHost(env: AppEnv, ?note : Note, ?theme : NoteTheme) as me =
       let update = {
         note' with
           Content = content
-          Geometry = Rect(origin.X, origin.Y, me.Width, me.Height)
+          Geometry = Rect(float origin.X, float origin.Y, me.Width, me.Height)
           Theme = defaultArg theme note'.Theme
       }
+
       match DML.upsertNote env update with
       | Ok note ->
         log.Debug("Note {NoteId} updated.", note'.Id)
-        me.Classes.Remove(string note'.Theme) |> ignore
-        me.Classes.Add(string note.Theme)
+        if note.Theme <> note'.Theme then
+          me.Classes.Remove(string note'.Theme) |> ignore
+          me.Classes.Add(string note.Theme)
         note' <- note
+
       | Error failure ->
         log.Error(failure, "Failed to update Note {NoteId}.", note'.Id)
         MessageBox.Alert(failure.Message, owner=me)
@@ -115,6 +116,7 @@ type StickyNoteHost(env: AppEnv, ?note : Note, ?theme : NoteTheme) as me =
         match DML.deleteNote env note'.Id with
         | Ok () ->
           me.Close()
+
         | Error failure ->
           log.Error(failure, "Failed to delete Note {NoteId}.", note'.Id)
           MessageBox.Alert(failure.Message, owner=me)

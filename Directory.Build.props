@@ -6,9 +6,11 @@
         <WarningLevel>5</WarningLevel>
         <WarnOn>
             1182;       <!-- unused bindings -->
-            3218;       <!-- signature / implementation argument mismatch -->
+            3128;       <!-- signature / implementation argument mismatch -->
+            3180;       <!-- implicit heap allocation for mutable promoted to ref cell -->
             3366;       <!-- OCaml-style indexer notation -->
             3388;       <!-- additional implicit upcasts (subsumption) -->
+            3389;       <!-- implicit numeric widening -->
             3390;       <!-- invalid XMLDoc comments -->
             3395;       <!-- method argument implicit conversion -->
             $(WarnOn)   <!-- include warning set elsewhere -->

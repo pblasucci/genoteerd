@@ -31,12 +31,12 @@ type Note =
 
   /// Creates a new empty note, at its minimum
   /// size, in the default on-screen location.
-  static member New() =
+  static member New(?theme) =
     {
       Id = NanoId.NewId()
       Content = ""
       Geometry = Rect(0., 0., 120., 120.)
-      Theme = Default
+      Theme = defaultArg theme Default
       UpdatedAt = None
     }
 
