@@ -10,6 +10,9 @@ open Serilog
 
 /// Provides access and utilities for logging.
 type ITrace =
+  /// Location on disk to which all log files are written.
+  abstract LogFolder : DirectoryInfo
+
   /// Emits a structured log entry for development-time diagnostics.
   abstract Debug : template : string * [<ParamArray>] data : obj array -> unit
 
@@ -37,6 +40,12 @@ type IClock =
 
 /// Provides access and utilities for data persistence.
 type IStore =
+  /// Location on disk wherein all database files are keep.
+  abstract DataFolder : DirectoryInfo
+
+  /// Full path to the database currently being used by the application.
+   abstract StorageFile : FileInfo
+
   /// Returns a new database connection.
   /// Callers are expected to handle closing/discarding the returned instance.
   abstract Connect : unit -> IDbConnection
@@ -92,16 +101,9 @@ type AppEnv(basePath, zone, clock, ?dbFile) =
   /// Location on disk where all application files live.
   member _.AppFolder = appFolder
 
-  /// Location on disk to which all log files are written.
-  member _.LogFolder = logFolder
-
-  /// Location on disk wherein all database files are keep.
-  member _.DataFolder = dataFolder
-
-  /// Full path to the database currently being used by the application.
-  member _.StorageFile = FileInfo storeFile
-
   interface ITrace with
+    member _.LogFolder = logFolder
+
     member _.Debug(template, data) = logger.Debug(template, data)
     member _.Info(template, data) = logger.Information(template, data)
     member _.Warn(template, data) = logger.Warning(template, data)
@@ -111,5 +113,8 @@ type AppEnv(basePath, zone, clock, ?dbFile) =
     member _.JustNow() = clock.GetCurrentZonedDateTime()
 
   interface IStore with
+    member _.DataFolder = dataFolder
+    member _.StorageFile = FileInfo storeFile
+
     member _.Connect() =
       new SQLiteConnection(string connection) :> IDbConnection

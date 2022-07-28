@@ -1,6 +1,5 @@
 namespace MulberryLabs.Genoteerd
 
-open System
 open System.Threading
 open System.Threading.Tasks
 open Avalonia.Controls
@@ -10,6 +9,7 @@ open MessageBox.Avalonia.DTO
 open MessageBox.Avalonia.Enums
 
 open type MessageBoxManager
+
 
 module MsgBox =
   let showDialog (task' : unit -> Task<'T>) =
@@ -41,10 +41,10 @@ module MsgBox =
   let makeAlert = makeDialog ButtonEnum.Ok
   let makeConfirm = makeDialog ButtonEnum.YesNo
 
-/// Utilities for working with dialogs in AvaloniaUI
+
+[<Sealed>]
 type MessageBox =
-   /// Display a message to the end-user in a model dialog.
-  static member Alert(message, ?title, ?owner) =
+  static member Alert(message, ?title, ?owner : Window) =
     MsgBox.showDialog (fun () -> task {
       let dialog = MsgBox.makeAlert (defaultArg title "Genoteerd") message
       let task =
@@ -55,8 +55,7 @@ type MessageBox =
       return ()
     })
 
-  /// Ask the end-user to make an 'yes or no' decision.
-  static member Confirm(prompt, ?title, ?owner) =
+  static member Confirm(prompt, ?title, ?owner : Window) =
     MsgBox.showDialog (fun () -> task {
       let dialog = MsgBox.makeConfirm (defaultArg title "Genoteerd") prompt
       let task =

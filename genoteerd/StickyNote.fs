@@ -1,5 +1,8 @@
 namespace MulberryLabs.Genoteerd
 
+open System.Text.RegularExpressions
+open System.Windows.Input
+open FSharp.Reflection
 open Avalonia
 open NodaTime
 
@@ -17,7 +20,7 @@ type Note =
     /// The on-screen coordinates of the note.
     Geometry : Rect
 
-    /// Currently not supported!
+    /// Determines the styling applied to an individual note.
     Theme : NoteTheme
 
     /// The point-in-time when the note was last persisted (or never).
@@ -37,7 +40,7 @@ type Note =
       UpdatedAt = None
     }
 
-/// Currently not supported!
+/// Identifies the styling applied to a note.
 and NoteTheme =
   | BlueMonday
   | Briquette
@@ -48,10 +51,33 @@ and NoteTheme =
   | RitesOfSpring
   | Whitesmoke
 
+[<RequireQualifiedAccess>]
+module private ThemeMap =
+  let lookup =
+    typeof<NoteTheme>
+    |> FSharpType.GetUnionCases
+    |> Array.map (fun case ->
+      let item = FSharpValue.MakeUnion(case, null)
+      (case.Name, unbox<NoteTheme> item)
+    )
+    |> Map.ofSeq
+
+type NoteTheme with
+  /// A 'display friendly' stringification of the note theme.
+  member me.Humanized = Regex.Replace(string me, "[A-Z]", " $0").Trim()
+
+  /// A collection of all possible themes for a note.
+  static member AllThemes = ThemeMap.lookup.Values
+  /// Tries to create a note theme from its stringified equivalent
+  static member TryParse(raw) = ThemeMap.lookup.TryFind(raw)
+
 
 /// Defines some basic functionality a "sticky note" needs,
 /// but with which a "sticky note" isn't actually concerned.
 type IStickyNoteHost =
+  /// Performs a graceful shutdown of the application.
+  abstract Quit : unit -> unit
+
   /// Spawns a new empty note, at its minimum
   /// size, in the default on-screen location.
   abstract Launch : unit -> unit
@@ -61,4 +87,4 @@ type IStickyNoteHost =
 
   /// Creates a note in persistent storage,
   /// or updates an existing note in storage.
-  abstract Upsert : text : string -> unit
+  abstract Upsert : text : string * ?theme : NoteTheme -> unit

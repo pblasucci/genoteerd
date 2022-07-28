@@ -3,6 +3,7 @@ module MulberryLabs.Genoteerd.Storage
 open System.Data
 open Avalonia
 open Dapper
+open Microsoft.FSharp.Core
 open NodaTime
 open NodaTime.Text
 
@@ -163,7 +164,7 @@ module SQL =
             {
               Id = tag row.note_id
               Content = row.content
-              Theme = Default //TODO parse from db row
+              Theme = defaultArg (NoteTheme.TryParse row.theme) Default
               Geometry = Rect(row.pos_x, row.pos_y, row.width, row.height)
               UpdatedAt = Some stamp'
             }

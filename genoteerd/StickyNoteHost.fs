@@ -1,8 +1,5 @@
 namespace MulberryLabs.Genoteerd
 
-open System
-open System.Buffers
-open System.Threading.Tasks
 open Avalonia
 open Avalonia.Controls
 open Avalonia.FuncUI.DSL
@@ -12,15 +9,19 @@ open Avalonia.Platform
 open MulberryLabs.Genoteerd
 open MulberryLabs.Genoteerd.Storage
 
-type StickyNoteHost(env: AppEnv, ?note : Note) as me =
+
+type StickyNoteHost(env: AppEnv, ?note : Note, ?theme : NoteTheme) as me =
   inherit HostWindow()
-  
+
   let host = me :> IStickyNoteHost
   // HACK ⮝⮝⮝ makes it easier to call into myself elsewhere
   let (Trace log) = env
   // HACK ⮝⮝⮝ remember: active patterns cannot be used in a .ctor
 
-  let mutable note' = note |> Option.defaultWith Note.New
+  let mutable note' =
+    note |> Option.defaultWith (fun () ->
+      { Note.New() with Theme = defaultArg theme Default }
+    )
 
   do (* .ctor *)
     let startLocation, top, right, bottom, left =
@@ -43,7 +44,7 @@ type StickyNoteHost(env: AppEnv, ?note : Note) as me =
     me.Height <- defaultArg bottom 120.
     me.Title <- "Genoteerd"
     me.Content <- StickyNoteView.main host note'.Content
-    me.Classes.Add("note")
+    me.Classes.Add(string note'.Theme)
 
     me.Opened.Add(fun _ ->
       let pos = me.Position
@@ -57,21 +58,22 @@ type StickyNoteHost(env: AppEnv, ?note : Note) as me =
 
     // geometric event handling
     me.PointerPressed.Add(fun args ->
-      args.Handled <- true
-      // resizing
-      match args.Source with
-      | :? WrapPanel as edge when edge.Classes.Contains "edge" ->
-        let windowEdge =
-          match DockPanel.GetDock(edge) with
-          | Dock.Top    -> WindowEdge.North
-          | Dock.Right  -> WindowEdge.East
-          | Dock.Bottom -> WindowEdge.South
-          | Dock.Left   -> WindowEdge.West
-          | otherwise ->
-            failwith $"Unknown Dock enumeration value: {otherwise}"
-        me.BeginResizeDrag(windowEdge, args)
-      // moving
-      | _ -> me.BeginMoveDrag(args)
+      if args.Pointer.IsPrimary then
+        args.Handled <- true
+        // resizing
+        match args.Source with
+        | :? WrapPanel as edge when edge.Classes.Contains "edge" ->
+          let windowEdge =
+            match DockPanel.GetDock(edge) with
+            | Dock.Top    -> WindowEdge.North
+            | Dock.Right  -> WindowEdge.East
+            | Dock.Bottom -> WindowEdge.South
+            | Dock.Left   -> WindowEdge.West
+            | otherwise ->
+              failwith $"Unknown Dock enumeration value: {otherwise}"
+          me.BeginResizeDrag(windowEdge, args)
+        // moving
+        | _ -> me.BeginMoveDrag(args)
     )
 
     // NOTE ⮟⮟⮟ fires when window dragged -or- top / left edge resized
@@ -82,19 +84,27 @@ type StickyNoteHost(env: AppEnv, ?note : Note) as me =
     me.EffectiveViewportChanged.Add(fun _ -> host.Upsert(note'.Content))
 
   interface IStickyNoteHost with
-    member _.Launch() =
-      StickyNoteHost(env).Show()
+    member _.Quit() =
+      match Application.CurrentDesktop with
+      | Some desktop -> desktop.Shutdown()
+      | None -> invalidProg "Incorrect application lifetime detected."
 
-    member me.Upsert(content) =
+    member _.Launch() =
+      StickyNoteHost(env, theme=note'.Theme).Show()
+
+    member me.Upsert(content, ?theme) =
       let origin = me.Position
       let update = {
         note' with
           Content = content
           Geometry = Rect(origin.X, origin.Y, me.Width, me.Height)
+          Theme = defaultArg theme note'.Theme
       }
       match DML.upsertNote env update with
       | Ok note ->
         log.Debug("Note {NoteId} updated.", note'.Id)
+        me.Classes.Remove(string note'.Theme) |> ignore
+        me.Classes.Add(string note.Theme)
         note' <- note
       | Error failure ->
         log.Error(failure, "Failed to update Note {NoteId}.", note'.Id)

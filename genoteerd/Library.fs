@@ -3,6 +3,8 @@ namespace MulberryLabs.Genoteerd
 open System
 open System.Data
 open System.IO
+open Avalonia
+open Avalonia.Controls.ApplicationLifetimes
 
 /// Contains miscellaneous utilities (n.b. this module is "auto-open'ed").
 [<AutoOpen>]
@@ -37,3 +39,9 @@ module Library =
     /// OS-specific path separator, to the full path of the current directory.
     member me.AppendPath([<ParamArray>] paths : string array) =
       Path.Combine [| me.FullName; yield! paths |]
+
+  type Application with
+    static member CurrentDesktop =
+      match Application.Current.ApplicationLifetime with
+      | :? IClassicDesktopStyleApplicationLifetime as desktop -> Some desktop
+      | _ -> None

@@ -32,14 +32,14 @@ type App() =
       when 0u < n -> Some file
     | _otherwise  -> None
 
-  let ensureDatabase (Trace log as env:AppEnv) =
-    if not env.StorageFile.Exists then
-      using (env.StorageFile.Open FileMode.OpenOrCreate) ignore
-      env.StorageFile.Refresh()
+  let ensureDatabase (Trace log & Store db) =
+    if not db.StorageFile.Exists then
+      using (db.StorageFile.Open FileMode.OpenOrCreate) ignore
+      db.StorageFile.Refresh()
 
-      match DDL.install env with
+      match DDL.install db with
       | Ok () ->
-          let path = env.StorageFile.FullName
+          let path = db.StorageFile.FullName
           log.Info("New store installed at '{Path}'", path)
       | Error x -> raise x
 
@@ -64,6 +64,7 @@ type App() =
         SystemClock.Instance,
         ?dbFile=tryGetDbFile desktop.Args
       )
+
       ensureDatabase env
       launchNotes env
 

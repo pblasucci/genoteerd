@@ -5,12 +5,7 @@
     <Application.Styles>
         <FluentTheme Mode="Light" />
 
-        <Style Selector="Window.note">
-            <Setter Property="Background" Value="LightYellow" />
-        </Style>
-
         <Style Selector="WrapPanel.edge">
-            <Setter Property="Background" Value="Yellow" />
             <Setter Property="Opacity" Value="0.5" />
         </Style>
 
@@ -51,6 +46,181 @@
         <Style Selector="TextBox:focus /template/ Border">
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="MenuItem">
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="FontFamily" Value="Fira Code" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Padding" Value="4, 6, 4, 4" />
+        </Style>
+
+        <!-- BlueMonday NOTE THEME -->
+        <Style Selector="MenuItem.BlueMonday">
+            <Setter Property="Background" Value="AliceBlue" />
+            <Setter Property="BorderBrush" Value="LightBlue" />
+        </Style>
+
+        <Style Selector="Window.BlueMonday">
+            <Setter Property="Background" Value="AliceBlue" />
+        </Style>
+
+        <Style Selector="Window.BlueMonday WrapPanel.header">
+            <Setter Property="Background" Value="AliceBlue" />
+        </Style>
+        <Style Selector="Window.BlueMonday WrapPanel.edge">
+            <Setter Property="Background" Value="LightBlue" />
+        </Style>
+
+        <Style Selector="Window.BlueMonday TextBox">
+            <Setter Property="SelectionBrush" Value="LightBlue" />
+        </Style>
+
+        <!-- Briquette NOTE THEME -->
+        <Style Selector="MenuItem.Briquette">
+            <Setter Property="Background" Value="OldLace" />
+            <Setter Property="BorderBrush" Value="BurlyWood" />
+        </Style>
+
+        <Style Selector="Window.Briquette">
+            <Setter Property="Background" Value="OldLace" />
+        </Style>
+
+        <Style Selector="Window.Briquette WrapPanel.header">
+            <Setter Property="Background" Value="OldLace" />
+        </Style>
+        <Style Selector="Window.Briquette WrapPanel.edge">
+            <Setter Property="Background" Value="BurlyWood" />
+        </Style>
+
+        <Style Selector="Window.Briquette TextBox">
+            <Setter Property="SelectionBrush" Value="BurlyWood" />
+        </Style>
+
+        <!-- Classic NOTE THEME -->
+        <Style Selector="MenuItem.Classic">
+            <Setter Property="Background" Value="LightYellow" />
+            <Setter Property="BorderBrush" Value="Khaki" />
+        </Style>
+
+        <Style Selector="Window.Classic">
+            <Setter Property="Background" Value="LightYellow" />
+        </Style>
+
+        <Style Selector="Window.Classic WrapPanel.header">
+            <Setter Property="Background" Value="LightYellow" />
+        </Style>
+        <Style Selector="Window.Classic WrapPanel.edge">
+            <Setter Property="Background" Value="Khaki" />
+        </Style>
+
+        <Style Selector="Window.Classic TextBox">
+            <Setter Property="SelectionBrush" Value="Khaki" />
+        </Style>
+
+        <!-- Default NOTE THEME -->
+        <Style Selector="MenuItem.Default">
+            <Setter Property="Background" Value="Gainsboro" />
+            <Setter Property="BorderBrush" Value="DarkGray" />
+        </Style>
+
+        <Style Selector="Window.Default">
+            <Setter Property="Background" Value="Gainsboro" />
+        </Style>
+
+        <Style Selector="Window.Default WrapPanel.header">
+            <Setter Property="Background" Value="Gainsboro" />
+        </Style>
+        <Style Selector="Window.Default WrapPanel.edge">
+            <Setter Property="Background" Value="DarkGray" />
+        </Style>
+
+        <Style Selector="Window.Default TextBox">
+            <Setter Property="SelectionBrush" Value="DarkGray" />
+        </Style>
+
+        <!-- PinkyPie NOTE THEME -->
+        <Style Selector="MenuItem.PinkyPie">
+            <Setter Property="Background" Value="MistyRose" />
+            <Setter Property="BorderBrush" Value="LightPink" />
+        </Style>
+
+        <Style Selector="Window.PinkyPie">
+            <Setter Property="Background" Value="MistyRose" />
+        </Style>
+
+        <Style Selector="Window.PinkyPie WrapPanel.header">
+            <Setter Property="Background" Value="MistyRose" />
+        </Style>
+        <Style Selector="Window.PinkyPie WrapPanel.edge">
+            <Setter Property="Background" Value="LightPink" />
+        </Style>
+
+        <Style Selector="Window.PinkyPie TextBox">
+            <Setter Property="SelectionBrush" Value="LightPink" />
+        </Style>
+
+        <!-- Redemption NOTE THEME -->
+        <Style Selector="MenuItem.Redemption">
+            <Setter Property="Background" Value="Lavender" />
+            <Setter Property="BorderBrush" Value="Thistle" />
+        </Style>
+
+        <Style Selector="Window.Redemption">
+            <Setter Property="Background" Value="Lavender" />
+        </Style>
+
+        <Style Selector="Window.Redemption WrapPanel.header">
+            <Setter Property="Background" Value="Lavender" />
+        </Style>
+        <Style Selector="Window.Redemption WrapPanel.edge">
+            <Setter Property="Background" Value="Thistle" />
+        </Style>
+
+        <Style Selector="Window.Redemption TextBox">
+            <Setter Property="SelectionBrush" Value="Thistle" />
+        </Style>
+
+        <!-- RitesOfSpring NOTE THEME -->
+        <Style Selector="MenuItem.RitesOfSpring">
+            <Setter Property="Background" Value="Honeydew" />
+            <Setter Property="BorderBrush" Value="DarkKhaki" />
+        </Style>
+
+        <Style Selector="Window.RitesOfSpring">
+            <Setter Property="Background" Value="Honeydew" />
+        </Style>
+
+        <Style Selector="Window.RitesOfSpring WrapPanel.header">
+            <Setter Property="Background" Value="Honeydew" />
+        </Style>
+        <Style Selector="Window.RitesOfSpring WrapPanel.edge">
+            <Setter Property="Background" Value="DarkKhaki" />
+        </Style>
+
+        <Style Selector="Window.RitesOfSpring TextBox">
+            <Setter Property="SelectionBrush" Value="DarkKhaki" />
+        </Style>
+
+        <!-- Whitesmoke NOTE THEME -->
+        <Style Selector="MenuItem.Whitesmoke">
+            <Setter Property="Background" Value="GhostWhite" />
+            <Setter Property="BorderBrush" Value="Gainsboro" />
+        </Style>
+
+        <Style Selector="Window.Whitesmoke">
+            <Setter Property="Background" Value="GhostWhite" />
+        </Style>
+
+        <Style Selector="Window.Whitesmoke WrapPanel.header">
+            <Setter Property="Background" Value="GhostWhite" />
+        </Style>
+        <Style Selector="Window.Whitesmoke WrapPanel.edge">
+            <Setter Property="Background" Value="Gainsboro" />
+        </Style>
+
+        <Style Selector="Window.Whitesmoke TextBox">
+            <Setter Property="SelectionBrush" Value="Gainsboro" />
         </Style>
 
     </Application.Styles>
