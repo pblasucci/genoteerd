@@ -21,6 +21,12 @@ type StickyNoteHost(env: AppEnv, ?note : Note, ?theme : NoteTheme) as me =
   let mutable note' =
     note |> Option.defaultWith (fun () -> Note.New(?theme=theme))
 
+  let extractTitle = function
+    | Length 0u     -> "Genoteerd"
+    | Length n as text
+      when 128u < n -> $"Genoteerd - %s{text[.. 125]}..."
+    | otherwise     -> $"Genoteerd - %s{otherwise}"
+
   do (* .ctor *)
     let startLocation, top, right, bottom, left =
       match note with
@@ -40,7 +46,7 @@ type StickyNoteHost(env: AppEnv, ?note : Note, ?theme : NoteTheme) as me =
     me.MinWidth <- 120.
     me.Width <- defaultArg right 120.
     me.Height <- defaultArg bottom 120.
-    me.Title <- "Genoteerd"
+    me.Title <- extractTitle note'.Content
     me.Content <- StickyNoteView.main host note'.Content
     me.Classes.Add(string note'.Theme)
 
@@ -106,6 +112,7 @@ type StickyNoteHost(env: AppEnv, ?note : Note, ?theme : NoteTheme) as me =
           me.Classes.Remove(string note'.Theme) |> ignore
           me.Classes.Add(string note.Theme)
         note' <- note
+        me.Title <- extractTitle note'.Content
 
       | Error failure ->
         log.Error(failure, "Failed to update Note {NoteId}.", note'.Id)

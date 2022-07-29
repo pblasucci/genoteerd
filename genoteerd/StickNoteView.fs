@@ -78,18 +78,21 @@ module StickyNoteView =
         Button.column 0
         Button.row 0
         Button.content "✚"
+        Button.tip "New note"
         Button.onClick (fun e -> e.Handled <- true; host.Launch())
       ]
       WrapPanel.create [
         WrapPanel.column 1
         WrapPanel.row 0
         WrapPanel.classes [ "header" ]
+        WrapPanel.tip "Left-click to drag. Right-click for options."
         WrapPanel.contextMenu (headerMenu host state)
       ]
       Button.create [
         Button.column 2
         Button.row 0
         Button.content "✖"
+        Button.tip "Delete note"
         Button.onClick (fun e -> e.Handled <- true; host.Delete())
       ]
     ]

@@ -5,6 +5,7 @@
         <LangVersion>preview</LangVersion>
         <WarningLevel>5</WarningLevel>
         <WarnOn>
+            $(WarnOn);  <!-- include warning set elsewhere -->
             1182;       <!-- unused bindings -->
             3128;       <!-- signature / implementation argument mismatch -->
             3180;       <!-- implicit heap allocation for mutable promoted to ref cell -->
@@ -12,8 +13,7 @@
             3388;       <!-- additional implicit upcasts (subsumption) -->
             3389;       <!-- implicit numeric widening -->
             3390;       <!-- invalid XMLDoc comments -->
-            3395;       <!-- method argument implicit conversion -->
-            $(WarnOn)   <!-- include warning set elsewhere -->
+            3395        <!-- method argument implicit conversion -->
         </WarnOn>
         <IsPackable>false</IsPackable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -29,5 +29,6 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <OutputPath>bin/Release/</OutputPath>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <OtherFlags>$(OtherFlags) --warnaserror-:3180</OtherFlags>
     </PropertyGroup>
 </Project>
