@@ -1,5 +1,7 @@
 namespace MulberryLabs.Genoteerd
 
+open System
+open System.Drawing
 open Avalonia
 open Avalonia.Controls
 open Avalonia.FuncUI.DSL
