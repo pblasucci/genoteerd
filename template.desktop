@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Genoteerd
+Icon=/home/pblasucci/.local/share/genoteerd/genoteerd.png
+Version=$($Version)
+Exec=/home/pblasucci/.local/share/genoteerd/genoteerd
+Type=Application
+Terminal=false
+StartupNotify=true
+StartupWMClass=genoteerd
+Categories=Utility;
