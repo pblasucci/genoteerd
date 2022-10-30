@@ -51,6 +51,9 @@ if (Test-Path $OutFolder) { Remove-Item $OutFolder -Recurse -Force -Verbose }
 # publish application
 Exec { dotnet publish -c 'Release' -o $OutFolder $FsProj }
 
+# ensure target dir
+New-Item -ItemType Directory -Path $ExecFolder -Force
+
 # move application to final destination
 Copy-Item "$OutFolder/$ExecName" -Destination $ExecFolder -Verbose
 
