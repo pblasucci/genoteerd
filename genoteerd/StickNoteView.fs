@@ -28,8 +28,7 @@ module StickyNoteView =
         WrapPanel.cursor (Cursor.Parse "SizeWestEast")
         WrapPanel.width 2.
         WrapPanel.classes [ "edge"; "WE" ]
-      | otherwise ->
-        failwith $"Unknown Dock enumeration value: {otherwise}"
+      | otherwise -> failwith $"Unknown Dock enumeration value: {otherwise}"
     ]
     :> IView
 
@@ -47,7 +46,7 @@ module StickyNoteView =
         for theme in NoteTheme.AllThemes do
           MenuItem.create [
             MenuItem.header theme.Humanized
-            MenuItem.classes [string theme]
+            MenuItem.classes [ string theme ]
             MenuItem.onClick (fun e ->
               e.Handled <- true
               host.Upsert(state.Current, theme)
@@ -63,39 +62,44 @@ module StickyNoteView =
         Separator.create []
         MenuItem.create [
           MenuItem.header "Quit"
-          MenuItem.onClick (fun e -> e.Handled <- true; host.Quit())
+          MenuItem.onClick (fun e ->
+            e.Handled <- true
+            host.Quit()
+          )
         ]
       ]
     ]
 
-  let header
-    (host : IStickyNoteHost)
-    (state : IWritable<string>)
-    : IView list
-    = [
-      (* header bar with buttons *)
-      Button.create [
-        Button.column 0
-        Button.row 0
-        Button.content "✚"
-        Button.tip "New note"
-        Button.onClick (fun e -> e.Handled <- true; host.Launch())
-      ]
-      WrapPanel.create [
-        WrapPanel.column 1
-        WrapPanel.row 0
-        WrapPanel.classes [ "header" ]
-        WrapPanel.tip "Left-click to drag. Right-click for options."
-        WrapPanel.contextMenu (headerMenu host state)
-      ]
-      Button.create [
-        Button.column 2
-        Button.row 0
-        Button.content "✖"
-        Button.tip "Delete note"
-        Button.onClick (fun e -> e.Handled <- true; host.Delete())
-      ]
+  let header (host : IStickyNoteHost) (state : IWritable<string>) : IView list = [
+    (* header bar with buttons *)
+    Button.create [
+      Button.column 0
+      Button.row 0
+      Button.content "✚"
+      Button.tip "New note"
+      Button.onClick (fun e ->
+        e.Handled <- true
+        host.Launch()
+      )
     ]
+    WrapPanel.create [
+      WrapPanel.column 1
+      WrapPanel.row 0
+      WrapPanel.classes [ "header" ]
+      WrapPanel.tip "Left-click to drag. Right-click for options."
+      WrapPanel.contextMenu (headerMenu host state)
+    ]
+    Button.create [
+      Button.column 2
+      Button.row 0
+      Button.content "✖"
+      Button.tip "Delete note"
+      Button.onClick (fun e ->
+        e.Handled <- true
+        host.Delete()
+      )
+    ]
+  ]
 
   let content (host : IStickyNoteHost) (state : IWritable<string>) =
     DockPanel.create [

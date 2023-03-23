@@ -3,5 +3,5 @@
 [bB]in/
 [oO]bj/
 [oO]ut/
-
+*.DotSettings.*
 .fake

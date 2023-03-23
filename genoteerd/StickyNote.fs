@@ -1,7 +1,6 @@
 namespace MulberryLabs.Genoteerd
 
 open System.Text.RegularExpressions
-open System.Windows.Input
 open FSharp.Reflection
 open Avalonia
 open NodaTime
@@ -31,14 +30,13 @@ type Note =
 
   /// Creates a new empty note, at its minimum
   /// size, in the default on-screen location.
-  static member New(?theme) =
-    {
-      Id = NanoId.NewId()
-      Content = ""
-      Geometry = Rect(0., 0., 120., 120.)
-      Theme = defaultArg theme Default
-      UpdatedAt = None
-    }
+  static member New(?theme) = {
+    Id = NanoId.NewId()
+    Content = ""
+    Geometry = Rect(0., 0., 120., 120.)
+    Theme = defaultArg theme Default
+    UpdatedAt = None
+  }
 
 /// Identifies the styling applied to a note.
 and NoteTheme =
@@ -50,6 +48,7 @@ and NoteTheme =
   | Redemption
   | RitesOfSpring
   | Whitesmoke
+
 
 [<RequireQualifiedAccess>]
 module private ThemeMap =

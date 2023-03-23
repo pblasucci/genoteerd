@@ -13,8 +13,9 @@ module DDL =
 module DML =
   /// Create a new entry in the database, unless a row with the given noteId
   /// already exists, in which case the row data is simply updated.
-  val upsertNote : env : 'T -> note : Note -> Result<Note, exn>
-    when 'T :> IClock and 'T :> IStore
+  val upsertNote :
+    env : 'T -> note : Note -> Result<Note, exn>
+      when 'T :> IClock and 'T :> IStore
 
   /// Drops a row with the given noteID from the database
   /// (n.b. invalid noteId causes this to be a non-operation).

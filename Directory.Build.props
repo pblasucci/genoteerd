@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <LangVersion>preview</LangVersion>
         <WarningLevel>5</WarningLevel>
         <WarnOn>
             $(WarnOn);  <!-- include warning set elsewhere -->
             1182;       <!-- unused bindings -->
             3128;       <!-- signature / implementation argument mismatch -->
-            3180;       <!-- implicit heap allocation for mutable promoted to ref cell -->
             3366;       <!-- OCaml-style indexer notation -->
-            3388;       <!-- additional implicit upcasts (subsumption) -->
-            3389;       <!-- implicit numeric widening -->
             3390;       <!-- invalid XMLDoc comments -->
-            3395        <!-- method argument implicit conversion -->
+            <!-- ⮟⮟⮟ useful for diagnosing issues ⮟⮟⮟ -->
+            <!-- 3180;  implicit heap allocation for mutable promoted to ref cell -->
+            <!-- 3388;  additional implicit upcasts (subsumption) -->
+            <!-- 3389;  implicit numeric widening -->
+            <!--3395    method argument implicit conversion -->
         </WarnOn>
         <IsPackable>false</IsPackable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>

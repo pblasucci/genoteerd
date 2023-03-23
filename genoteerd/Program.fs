@@ -18,7 +18,8 @@ type App() =
 
   let ensureTimeZone () =
     let zone = DateTimeZoneProviders.Tzdb.GetSystemDefault()
-    if isNull zone then invalidProg "Unable to determine current time zone!"
+    if isNull zone then
+      invalidProg "Unable to determine current time zone!"
     zone
 
   let ensureBasePath () =
@@ -28,9 +29,8 @@ type App() =
 
   let tryGetDbFile args =
     match args with
-    | [| "--db"; Length n as file |]
-      when 0u < n -> Some file
-    | _otherwise  -> None
+    | [| "--db"; Length n as file |] when 0u < n -> Some file
+    | _otherwise -> None
 
   let ensureDatabase (Trace log & Store db) =
     if not db.StorageFile.Exists then
@@ -38,32 +38,33 @@ type App() =
       db.StorageFile.Refresh()
 
       match DDL.install db with
-      | Ok () ->
-          let path = db.StorageFile.FullName
-          log.Info("New store installed at '{Path}'", path)
+      | Ok() ->
+        let path = db.StorageFile.FullName
+        log.Info("New store installed at '{Path}'", path)
       | Error x -> raise x
 
   let launchNotes (Trace log as env) =
     match SQL.selectAllNotes env with
     | Error failure ->
-        log.Error(failure, "Unable to retrieve existing notes.")
-        StickyNoteHost(env).Show()
+      log.Error(failure, "Unable to retrieve existing notes.")
+      StickyNoteHost(env).Show()
     | Ok [] -> StickyNoteHost(env).Show()
     | Ok notes ->
-        for note in notes do
-          StickyNoteHost(env, note).Show()
+      for note in notes do
+        StickyNoteHost(env, note).Show()
 
   override me.Initialize() = AvaloniaXamlLoader.Load(me)
 
   override me.OnFrameworkInitializationCompleted() =
     match me.ApplicationLifetime with
     | :? IClassicDesktopStyleApplicationLifetime as desktop ->
-      let env = AppEnv(
-        ensureBasePath (),
-        ensureTimeZone (),
-        SystemClock.Instance,
-        ?dbFile=tryGetDbFile desktop.Args
-      )
+      let env =
+        AppEnv(
+          ensureBasePath (),
+          ensureTimeZone (),
+          SystemClock.Instance,
+          ?dbFile = tryGetDbFile desktop.Args
+        )
 
       ensureDatabase env
       launchNotes env

@@ -25,14 +25,15 @@ type ITrace =
 
   /// Emits a structured log entry when essential functionality is unavailable.
   abstract Error :
-    error : exn *
-    template : string *
-    [<ParamArray>] data : obj array
-     -> unit
+    error : exn * template : string * [<ParamArray>] data : obj array -> unit
 
 
 /// Provides access and utilities for clock, calender, and timezone.
 type IClock =
+  /// The time zone in which the app is currently operating
+  /// (will normally be the same as in the underlying operating system).
+  abstract EffectiveTimeZone : DateTimeZone
+
   /// Return the current instant,
   /// as configured in a particular time zone (usually, system default).
   abstract JustNow : unit -> ZonedDateTime
@@ -44,7 +45,7 @@ type IStore =
   abstract DataFolder : DirectoryInfo
 
   /// Full path to the database currently being used by the application.
-   abstract StorageFile : FileInfo
+  abstract StorageFile : FileInfo
 
   /// Returns a new database connection.
   /// Callers are expected to handle closing/discarding the returned instance.
@@ -55,13 +56,13 @@ type IStore =
 [<AutoOpen>]
 module Patterns =
   /// Helper to simplify working with IClock instances.
-  let inline (|Trace|) (source : #ITrace) = Trace (source :> ITrace)
+  let inline (|Trace|) (source : #ITrace) = Trace(source :> ITrace)
 
   /// Helper to simplify working with IClock instances.
-  let inline (|Clock|) (source : #IClock) = Clock (source :> IClock)
+  let inline (|Clock|) (source : #IClock) = Clock(source :> IClock)
 
   /// Helper to simplify working with IStore instances.
-  let inline (|Store|) (source : #IStore) = Store (source :> IStore)
+  let inline (|Store|) (source : #IStore) = Store(source :> IStore)
 
 
 /// Provides execution-environment dependent data and functionality.
@@ -92,9 +93,9 @@ type AppEnv(basePath, zone, clock, ?dbFile) =
       .MinimumLevel.Information()
 #endif
       .WriteTo.File(
-        path=logFileBase,
-        rollingInterval=RollingInterval.Day,
-        rollOnFileSizeLimit=true
+        path = logFileBase,
+        rollingInterval = RollingInterval.Day,
+        rollOnFileSizeLimit = true
       )
       .CreateLogger()
 
@@ -110,6 +111,7 @@ type AppEnv(basePath, zone, clock, ?dbFile) =
     member _.Error(error, template, data) = logger.Error(error, template, data)
 
   interface IClock with
+    member _.EffectiveTimeZone = zone
     member _.JustNow() = clock.GetCurrentZonedDateTime()
 
   interface IStore with

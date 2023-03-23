@@ -9,6 +9,7 @@ open NodaTime.Text
 
 open type DateTimeZoneProviders
 
+
 let stamp = ZonedDateTimePattern.GeneralFormatOnlyIso.WithZoneProvider(Tzdb)
 
 
@@ -38,11 +39,10 @@ module DDL =
     use db = store.Connect()
     use tx = db.StartTransaction()
     try
-      db.Execute(sql=Notes, transaction=tx) |> ignore
+      db.Execute(sql = Notes, transaction = tx) |> ignore
       tx.Commit()
-      Ok ()
-    with
-    | x ->
+      Ok()
+    with x ->
       tx.Rollback()
       Error x
 
@@ -85,24 +85,23 @@ module DML =
     try
       let now : ZonedDateTime = clock.JustNow()
       db.Execute(
-        sql=SaveNote,
-        param=
-          {|
-            noteId = string note.Id
-            content = note.Content
-            theme = string note.Theme
-            posX = note.Geometry.X
-            posY = note.Geometry.Y
-            height = note.Geometry.Height
-            width = note.Geometry.Width
-            updatedAt = stamp.Format(now)
-          |},
-        transaction=tx
-      ) |> ignore
+        sql = SaveNote,
+        param = {|
+          noteId = string note.Id
+          content = note.Content
+          theme = string note.Theme
+          posX = note.Geometry.X
+          posY = note.Geometry.Y
+          height = note.Geometry.Height
+          width = note.Geometry.Width
+          updatedAt = stamp.Format(now)
+        |},
+        transaction = tx
+      )
+      |> ignore
       tx.Commit()
       Ok { note with UpdatedAt = Some now }
-    with
-    | x ->
+    with x ->
       tx.Rollback()
       Error x
 
@@ -111,23 +110,23 @@ module DML =
     use tx = db.StartTransaction()
     try
       db.Execute(
-        sql=DropNote,
-        param={| noteId = string noteId |},
-        transaction=tx
-      ) |> ignore
+        sql = DropNote,
+        param = {| noteId = string noteId |},
+        transaction = tx
+      )
+      |> ignore
       tx.Commit()
-      Ok ()
-    with
-    | x ->
+      Ok()
+    with x ->
       tx.Rollback()
       Error x
 
 
 [<RequireQualifiedAccess>]
 module SQL =
-    [<Literal>]
-    let AllNotes =
-      """
+  [<Literal>]
+  let AllNotes =
+    """
       SELECT
           note_id,
           content,
@@ -141,33 +140,32 @@ module SQL =
       ORDER BY updated_at DESC;
       """
 
-    [<CLIMutable>]
-    type note_row =
-      {
-        note_id : string
-        content : string
-        theme : string
-        pos_x : float
-        pos_y : float
-        height : float
-        width : float
-        updated_at : string
-      }
+  [<CLIMutable>]
+  type note_row = {
+    note_id : string
+    content : string
+    theme : string
+    pos_x : float
+    pos_y : float
+    height : float
+    width : float
+    updated_at : string
+  }
 
-    let selectAllNotes (Store store) =
-      use db : IDbConnection = store.Connect()
-      try
-        let rows = db.Query<note_row>(AllNotes)
-        Ok [
-          for row in rows do
-            let stamp' = stamp.Parse(row.updated_at).GetValueOrThrow()
-            {
-              Id = tag row.note_id
-              Content = row.content
-              Theme = defaultArg (NoteTheme.TryParse row.theme) Default
-              Geometry = Rect(row.pos_x, row.pos_y, row.width, row.height)
-              UpdatedAt = Some stamp'
-            }
-        ]
-      with
-      | x -> Error x
+  let selectAllNotes (Store store) =
+    use db : IDbConnection = store.Connect()
+    try
+      let rows = db.Query<note_row>(AllNotes)
+      Ok [
+        for row in rows do
+          let stamp' = stamp.Parse(row.updated_at).GetValueOrThrow()
+          {
+            Id = nanoid.tag row.note_id
+            Content = row.content
+            Theme = defaultArg (NoteTheme.TryParse row.theme) Default
+            Geometry = Rect(row.pos_x, row.pos_y, row.width, row.height)
+            UpdatedAt = Some stamp'
+          }
+      ]
+    with x ->
+      Error x
